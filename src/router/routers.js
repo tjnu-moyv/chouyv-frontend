@@ -3,32 +3,32 @@
 const routes = [
     {
         path: '/login',
-        component: () => import('@/views/Login.vue')
+        component: () => import('@/views/LoginPage.vue')
     },
     {
         path: '/register',
-        component: () => import('@/views/Register.vue')
+        component: () => import('@/views/RegisterPage.vue')
     },
     {
         path: '/student',
-        component: () => import('@/views/student/Student.vue'),
+        component: () => import('@/views/student/StudentPage.vue'),
         children: [
             {
                 path: 'shops',
-                component: () => import('@/views/student/shops/Shops.vue'),
+                component: () => import('@/views/student/shops/ShopsPage.vue'),
                 children: [
                     /* 未完成 */
                 ]
             },
             {
                 path: 'run',
-                component: () => import('@/views/student/run/Run.vue')
+                component: () => import('@/views/student/run/RunPage.vue')
             }
         ]
     },
     {
-        path: '/shops',
-        component: () => import('@/views/shop/Shop.vue')
+        path: '/shop',
+        component: () => import('@/views/shop/ShopPage.vue')
     }
 ]
 export default routes
