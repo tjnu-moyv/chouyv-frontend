@@ -1,6 +1,6 @@
 <template>
-  <div id="shop">
-    Shop Nav
+  <div id="student">
+    Student Nav
     <router-view/>
   </div>
 </template>
