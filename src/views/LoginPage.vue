@@ -73,4 +73,13 @@ export default {
   color: #409EFF;
   cursor: pointer;
 }
+
+/* 修改element组件样式 */
+.el-input {
+  width: 100%;
+}
+
+.el-button {
+  width: 100%;
+}
 </style>
