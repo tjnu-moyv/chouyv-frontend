@@ -1,4 +1,5 @@
 <template>
+  <!-- 注册页面 -->
   <div id="register">
     register
   </div>

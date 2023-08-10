@@ -1,6 +1,7 @@
 <template>
+  <!-- 选择商家主页面 -->
   <div id="shops">
-    shops
+    <router-view/>
   </div>
 </template>
 
