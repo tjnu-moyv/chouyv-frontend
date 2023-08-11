@@ -3,14 +3,19 @@
   <div id="login">
     <h2 class="title">登录</h2>
     <el-form :model="loginForm" ref="loginForm" label-width="80px" class="form">
-      <el-form-item label="用户名" prop="username">
+      <el-form-item label="用户名" prop="username" :rules="[
+        { required: true, message: '请输入用户名', trigger: 'blur' }
+      ]">
         <el-input v-model="loginForm.username" autocomplete="off" placeholder="请输入用户名"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
+      <el-form-item label="密码" prop="password" :rules="[
+        { required: true, message: '请输入密码', trigger: 'blur' },
+        { min: 6, message: '密码不能少于6位', trigger: 'blur' }
+      ]">
         <el-input type="password" v-model="loginForm.password" autocomplete="off" placeholder="请输入密码"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="login">登录</el-button>
+        <el-button type="primary" @click="login" class="login-btn">登录</el-button>
         <span class="link" @click="goToRegister">没有账号？去注册</span>
       </el-form-item>
     </el-form>
@@ -18,6 +23,48 @@
 </template>
   
 <script>
+import axios from "axios";
+import { Message } from "element-ui";
+
+const request = axios.create({
+  baseURL: '/', // 请求的基础路径
+  timeout: 5000,   // 请求超时时间
+});
+
+const tokenExclude = [
+  '/students/login',
+  '/students/register'
+]
+
+request.interceptors.request.use(config => {
+  // config: 请求拦截器回调注入的对象
+  // 排除登陆注册
+  let url = config.url; // `!` 明确告知ts返回值不会是undefined
+  for (let str of tokenExclude) {
+    if (url.endsWith(str)) {
+      // 以登录注册页的请求url结尾的直接排除
+      return config
+    }
+  }
+  let token = JSON.parse(localStorage.getItem('token'))
+  if (token !== null) {
+    config.headers['token'] = token.value
+  }
+  return config
+});
+
+request.interceptors.response.use(
+  response => {
+    // 相应拦截器成功的回调 一般用于简化数据
+    return response.data;
+  },
+  error => {
+    // 失败的回调
+    Message.error(error.message);
+    return Promise.reject(new Error(error.message))
+  }
+);
+
 export default {
   data() {
     return {
@@ -31,8 +78,22 @@ export default {
     login() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          // 处理登录逻辑
-          console.log('登录成功');
+          // 发送登录请求
+          const formData = {
+            username: this.loginForm.username,
+            password: this.loginForm.password
+          };
+          request.post('/students/login', formData)
+            .then(response => {
+              // 登录成功的处理逻辑
+              console.log('登录成功', response);
+              // 可以进行页面跳转或其他操作
+            })
+            .catch(error => {
+              // 登录失败的处理逻辑
+              console.log('登录失败', error);
+              // 可以进行错误提示等操作
+            });
         } else {
           console.log('登录失败');
           return false;
@@ -41,7 +102,21 @@ export default {
     },
     goToRegister() {
       this.$router.push('/register');
+    },
+    resizeHandler() {
+      const loginDiv = document.getElementById('login');
+      const windowHeight = window.innerHeight;
+      const loginHeight = loginDiv.offsetHeight;
+      const marginTop = (windowHeight - loginHeight) / 2;
+      loginDiv.style.marginTop = marginTop + 'px';
     }
+  },
+  mounted() {
+    this.resizeHandler();
+    window.addEventListener('resize', this.resizeHandler);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizeHandler);
   }
 }
 </script>
@@ -49,20 +124,24 @@ export default {
 <style scoped>
 #login {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: #f2f2f2;
+  margin-top: 0;
 }
 
 .title {
-  font-size: 24px;
+  font-size: 28px;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  color: #333;
 }
 
 .form {
   width: 400px;
-  padding: 20px;
+  padding: 40px;
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
@@ -72,14 +151,27 @@ export default {
 .link {
   color: #409EFF;
   cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.el-form-item__error {
+  color: #f56c6c;
+  font-size: 12px;
 }
 
 /* 修改element组件样式 */
 .el-input {
   width: 100%;
+  border-radius: 4px;
 }
 
 .el-button {
   width: 100%;
+  border-radius: 4px;
 }
 </style>
