@@ -12,7 +12,7 @@
         { required: true, message: '请输入密码', trigger: 'blur' },
         { min: 6, message: '密码不能少于6位', trigger: 'blur' }
       ]">
-        <el-input type="password" v-model="loginForm.password" autocomplete="off" placeholder="请输入密码"></el-input>
+        <el-input type="password" v-model="loginForm.password" autocomplete="off" show-password placeholder="请输入密码"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="login" class="login-btn">登录</el-button>

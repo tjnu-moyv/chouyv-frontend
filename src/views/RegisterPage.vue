@@ -11,14 +11,15 @@
         { min: 6, message: '密码不能少于6位', trigger: 'blur' },
         { pattern: /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/, message: '密码必须包含英文和数字', trigger: 'blur' }
       ]">
-        <el-input type="password" v-model="registerForm.password" autocomplete="off" placeholder="请输入密码"></el-input>
+        <el-input type="password" v-model="registerForm.password" autocomplete="off" show-password
+                  placeholder="请输入密码"></el-input>
       </el-form-item>
       <el-form-item label="确认密码" prop="confirmPassword" :rules="[
         { required: true, message: '请再次输入密码', trigger: 'blur' },
         { validator: confirmPasswordValidator, trigger: 'blur' }
       ]">
-        <el-input type="password" v-model="registerForm.confirmPassword" autocomplete="off"
-          placeholder="请再次输入密码"></el-input>
+        <el-input type="password" v-model="registerForm.confirmPassword" autocomplete="off" show-password
+                  placeholder="请再次输入密码"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="register">注册</el-button>
@@ -27,7 +28,7 @@
     </el-form>
   </div>
 </template>
-  
+
 <script>
 export default {
   data() {
@@ -64,7 +65,7 @@ export default {
   }
 }
 </script>
-  
+
 <style scoped>
 #register {
   display: flex;
