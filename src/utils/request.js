@@ -15,7 +15,7 @@ const tokenExclude = [
 request.interceptors.request.use(config => {
     // config: 请求拦截器回调注入的对象
     // 排除登陆注册
-    let url = config.url; // `!` 明确告知ts返回值不会是undefined
+    let url = config.url;
     for (let str of tokenExclude) {
         if (url.endsWith(str)) {
             // 以登录注册页的请求url结尾的直接排除
