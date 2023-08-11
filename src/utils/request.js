@@ -3,13 +3,13 @@ import {Message} from "element-ui";
 import {getLocalStorage} from "@/utils/local-storage";
 
 const request = axios.create({
-    baseURL: '/', // 请求的基础路径
+    baseURL: 'http://172.30.80.132', // 请求的基础路径
     timeout: 5000,   // 请求超时时间
 });
 
 const tokenExclude = [
-    '/users/login',
-    '/users/register'
+    '/students/login',
+    '/students/register'
 ]
 
 request.interceptors.request.use(config => {
