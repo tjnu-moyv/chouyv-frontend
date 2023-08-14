@@ -42,47 +42,20 @@ export default {
   },
   methods: {
     login() {
+      let flag = true // 是否能通过表单验证
       this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          // 发送登录请求
-          const formData = {
-            username: this.loginForm.username,
-            password: this.loginForm.password
-          };
-          request.post('/students/login', formData)
-              .then(response => {
-                // 登录成功的处理逻辑
-                console.log('登录成功', response);
-                // 可以进行页面跳转或其他操作
-              })
-              .catch(error => {
-                // 登录失败的处理逻辑
-                console.log('登录失败', error);
-                // 可以进行错误提示等操作
-              });
-        } else {
-          console.log('登录失败');
-          return false;
-        }
+        if (!valid) flag = false
       });
+      if (!flag) return
+      request.post('/students/login', this.loginForm).then(response => {
+        console.log('post', response)
+      }).catch(error => {
+        console.error(error)
+      })
     },
     goToRegister() {
       this.$router.push('/register');
     },
-    resizeHandler() {
-      const loginDiv = document.getElementById('login');
-      const windowHeight = window.innerHeight;
-      const loginHeight = loginDiv.offsetHeight;
-      const marginTop = (windowHeight - loginHeight) / 2;
-      loginDiv.style.marginTop = marginTop + 'px';
-    }
-  },
-  mounted() {
-    this.resizeHandler();
-    window.addEventListener('resize', this.resizeHandler);
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.resizeHandler);
   }
 }
 </script>
