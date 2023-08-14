@@ -32,7 +32,11 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(
     response => {
         // 相应拦截器成功的回调 一般用于简化数据
-        return response.data.data;
+        let data = response.data
+        if (data.code !== 200) {
+            Message.error(data.message + ' ( ' + data.description + ' )')
+        }
+        return data.data;
     },
     error => {
         // 失败的回调
