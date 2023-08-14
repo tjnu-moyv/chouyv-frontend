@@ -3,7 +3,7 @@ import {Message} from "element-ui";
 import {getLocalStorage} from "@/utils/local-storage";
 
 const request = axios.create({
-    baseURL: 'http://172.30.80.132', // 请求的基础路径
+    baseURL: 'http://localhost:9000', // 请求的基础路径
     timeout: 5000,   // 请求超时时间
 });
 
@@ -32,7 +32,7 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(
     response => {
         // 相应拦截器成功的回调 一般用于简化数据
-        return response.data;
+        return response.data.data;
     },
     error => {
         // 失败的回调
