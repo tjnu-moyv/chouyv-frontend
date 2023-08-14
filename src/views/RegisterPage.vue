@@ -10,8 +10,8 @@
         <el-input type="password" v-model="registerForm.password" autocomplete="off" show-password
                   placeholder="请输入密码"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码" prop="confirmPassword">
-        <el-input type="password" v-model="registerForm.confirmPassword" autocomplete="off" show-password
+      <el-form-item label="确认密码" prop="checkPwd">
+        <el-input type="password" v-model="registerForm.checkPwd" autocomplete="off" show-password
                   placeholder="请再次输入密码"></el-input>
       </el-form-item>
       <el-form-item>
@@ -23,13 +23,15 @@
 </template>
 
 <script>
+import request from "@/utils/request";
+
 export default {
   data() {
     return {
       registerForm: {
         username: '',
         password: '',
-        confirmPassword: ''
+        checkPwd: ''
       },
       rules: {
         username: [
@@ -40,7 +42,7 @@ export default {
           {min: 6, message: '密码不能少于6位', trigger: 'blur'},
           {pattern: /[!-z]/, message: '密码包含了其他字符', trigger: 'blur'}
         ],
-        confirmPassword: [
+        checkPwd: [
           {required: true, message: '请再次输入密码', trigger: 'blur'},
           {
             validator: (rule, value, callback) => {
@@ -57,15 +59,16 @@ export default {
   },
   methods: {
     register() {
+      let flag = true // 是否能通过表单验证
       this.$refs.registerForm.validate((valid) => {
-        if (valid) {
-          // 处理注册逻辑
-          console.log('注册成功');
-        } else {
-          console.log('注册失败');
-          return false;
-        }
+        if (!valid) flag = false
       });
+      if (!flag) return
+      request.post('/students/register', this.registerForm).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
     },
     goToLogin() {
       this.$router.push('/login');

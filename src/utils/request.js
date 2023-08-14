@@ -34,7 +34,9 @@ request.interceptors.response.use(
         // 相应拦截器成功的回调 一般用于简化数据
         let data = response.data
         if (data.code !== 200) {
-            Message.error(data.message + ' ( ' + data.description + ' )')
+            let errMsg = data.message + ' ( ' + data.description + ' )'
+            Message.error(errMsg)
+            return Promise.reject(new Error(errMsg))
         }
         return data.data;
     },
