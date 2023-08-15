@@ -3,6 +3,11 @@
 const routes = [
     {
         // 登录页面路由
+        path: '/',
+        component: () => import('@/views/LoginPage.vue')
+    },
+    {
+        // 登录页面路由
         path: '/login',
         component: () => import('@/views/LoginPage.vue')
     },

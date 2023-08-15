@@ -1,5 +1,5 @@
 <template>
-    <!-- 第一次选择配餐页面 -->
+    <!-- 第一次选择配送页面 -->
     <div id="firstRunPage">
       first
     </div>
