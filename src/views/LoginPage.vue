@@ -20,6 +20,8 @@
 
 <script>
 import request from "@/utils/request";
+import {setLocalStorage} from "@/utils/local-storage";
+import jwtDecode from "jwt-decode";
 
 export default {
   data() {
@@ -48,7 +50,11 @@ export default {
       });
       if (!flag) return
       request.post('/students/login', this.loginForm).then(response => {
-        console.log('post', response)
+        let token = response.token
+        setLocalStorage('token', token)
+        let user = jwtDecode(token)
+        setLocalStorage('id', user.iss)
+        setLocalStorage('username', user.sub)
       }).catch(error => {
         console.error(error)
       })
