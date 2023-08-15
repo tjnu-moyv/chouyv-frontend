@@ -56,6 +56,7 @@ import {Message} from "element-ui";
 import {setLocalStorage} from "@/utils/local-storage";
 import {defineComponent} from "vue";
 import jwtDecode from "jwt-decode";
+import router from "@/router";
 
 export default defineComponent({
   name: "LoginPage",
@@ -112,14 +113,13 @@ export default defineComponent({
           '/students/login',
           this.login
       ).then(
-          function (res) {
-            if (res.data.code > 0) {
-              console.log(res)
-              Message.error("登录错误: " + res.data.message + ' ' + res.data.description)
-              return
-            }
-            setLocalStorage('token', res.data.data)
-            window.location.href = '/student/shops'
+          function (response) {
+            let token = response.token
+            setLocalStorage('token', token)
+            let user = jwtDecode(token)
+            setLocalStorage('id', user.iss)
+            setLocalStorage('username', user.sub)
+            router.push('/student/shops')
           }
       ).catch(error => {
         console.log(error)
@@ -144,6 +144,7 @@ export default defineComponent({
             let user = jwtDecode(token)
             setLocalStorage('id', user.iss)
             setLocalStorage('username', user.sub)
+            router.push('/shop')
           }
       ).catch(error => {
         console.log(error)
