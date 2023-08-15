@@ -29,7 +29,7 @@ const routes = [
             {
                 // 学生点餐
                 path: 'shops',
-                component: () => import('@/views/student/shops/ShopsPage.vue'),
+                component: () => import('@/views/student/shops/OrderShopsPage.vue'),
                 children: [
                     {
                         // 选择菜品页面
