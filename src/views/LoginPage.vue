@@ -35,12 +35,8 @@
           @click="loginAction"
       >登 录
       </el-button>
-      <p style="margin-top: 15px;"
-      >没有账号? 点
-        <router-link to="register"
-                     style="text-decoration: none; color:#eee; font-weight: 700"
-        >这里注册
-        </router-link>
+      <p>没有账号? 点
+        <router-link to="register">这里注册</router-link>
       </p>
     </div>
   </div>
@@ -142,6 +138,13 @@ export default defineComponent({
 
     p {
       color: #bbb;
+      margin-top: 15px;
+
+      a {
+        text-decoration: none;
+        color: #eee;
+        font-weight: 700
+      }
     }
 
     .el-input {

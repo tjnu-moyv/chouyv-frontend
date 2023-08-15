@@ -40,14 +40,10 @@
           round
           style="width: 60%;"
           @click="registerAction"
-      >注 册
+      >学 生 注 册
       </el-button>
-      <p style="margin-top: 15px;"
-      >已有账号? 点
-        <router-link to="login"
-                     style="text-decoration: none; color:#eee; font-weight: 700"
-        >这里登录
-        </router-link>
+      <p>已有账号? 点
+        <router-link to="login">这里登录</router-link>
       </p>
     </div>
   </div>
@@ -166,6 +162,13 @@ export default defineComponent({
 
     p {
       color: #bbb;
+      margin-top: 15px;
+
+      a {
+        text-decoration: none;
+        color: #eee;
+        font-weight: 700
+      }
     }
 
     .el-input {
