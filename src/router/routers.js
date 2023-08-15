@@ -63,14 +63,12 @@ const routes = [
             {
                 // 学生个人信息页面
                 path: 'profile',
-                component: () => import('@/views/student/profile/ProfilePage.vue'),
-                children: [
-                    {
-                        // 设置界面
-                        path: 'settings',
-                        component: () => import('@/views/student/profile/settings/SettingsPage.vue')
-                    }
-                ]
+                component: () => import('@/views/student/profile/ProfilePage.vue')
+            },
+            {
+                // 设置界面
+                path: 'settings',
+                component: () => import('@/views/student/profile/settings/SettingsPage.vue')
             }
         ]
     },
