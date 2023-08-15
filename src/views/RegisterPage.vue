@@ -155,39 +155,39 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   text-align: center;
-}
 
-.register-body {
-  width: 400px;
-  padding: 64px;
+  .register-body {
+    width: 400px;
+    padding: 64px;
+
+    h1 {
+      color: #eee;
+    }
+
+    p {
+      color: #bbb;
+    }
+
+    .el-input {
+      margin-top: 8%;
+    }
+
+    .el-button {
+      margin-top: 10%;
+    }
+  }
 }
 
 @media screen and (max-width: 768px) {
   .register {
     padding: 16px;
     flex-direction: column;
+
+    .register-body {
+      width: 300px;
+      padding: 32px;
+    }
   }
-
-  .register-body {
-    width: 300px;
-    padding: 32px;
-  }
-}
-
-.register .register-body h1 {
-  color: #eee;
-}
-
-.register .register-body p {
-  color: #bbb;
-}
-
-.register .register-body .el-input {
-  margin-top: 8%;
-}
-
-.register .register-body .el-button {
-  margin-top: 10%;
 }
 
 :deep(.el-input__inner) {
