@@ -5,9 +5,9 @@
       <h1>登 录</h1>
       <p>请使用用户中心账户登录</p>
       <el-form :rules="rules" ref="login" :model="login">
-        <el-form-item prop="account">
+        <el-form-item prop="username">
           <el-input
-              v-model="login.account"
+              v-model="login.username"
               type="text"
               maxlength="256"
               minlength="6"
@@ -20,7 +20,7 @@
               v-model="login.password"
               type="password"
               maxlength="512"
-              minlength="8"
+              minlength="6"
               placeholder="用户密码: "
               autocomplete="off"
               show-password
@@ -32,8 +32,15 @@
           type="primary"
           round
           style="width: 60%;"
-          @click="loginAction"
-      >登 录
+          @click="loginStudentAction"
+      >学 生 登 录
+      </el-button>
+      <el-button
+          type="primary"
+          round
+          style="width: 60%;"
+          @click="loginShopAction"
+      >商 铺 登 录
       </el-button>
       <p>没有账号? 点
         <router-link to="register">这里注册</router-link>
@@ -48,12 +55,13 @@ import request from "@/utils/request";
 import {Message} from "element-ui";
 import {setLocalStorage} from "@/utils/local-storage";
 import {defineComponent} from "vue";
+import jwtDecode from "jwt-decode";
 
 export default defineComponent({
   name: "LoginPage",
   components: {RandomTree},
   data() {
-    const account = (rule, value, callback) => {
+    const username = (rule, value, callback) => {
       if (value === '') {
         callback(new Error("请输入登录账号"))
       } else {
@@ -70,20 +78,20 @@ export default defineComponent({
       if (value === '') {
         callback(new Error("请输入登录密码"))
       } else {
-        if (value.length < 8) {
-          callback(new Error("登录密码不能小于8位"))
+        if (value.length < 6) {
+          callback(new Error("登录密码不能小于6位"))
         }
         callback()
       }
     }
     return {
       login: {
-        account: "",
+        username: "",
         password: ""
       },
       rules: {
-        account: [
-          {validator: account, trigger: 'blur'}
+        username: [
+          {validator: username, trigger: 'blur'}
         ],
         password: [
           {validator: password, trigger: 'blur'}
@@ -92,7 +100,7 @@ export default defineComponent({
     }
   },
   methods: {
-    loginAction() {
+    loginStudentAction() {
       let flag = false;
       this.$refs['login'].validate((value) => {
         if (!value) {
@@ -101,7 +109,7 @@ export default defineComponent({
       })
       if (flag) return
       request.post(
-          '/users/login',
+          '/students/login',
           this.login
       ).then(
           function (res) {
@@ -112,6 +120,30 @@ export default defineComponent({
             }
             setLocalStorage('token', res.data.data)
             window.location.href = '/todolist'
+          }
+      ).catch(error => {
+        console.log(error)
+        Message.error("登录发生错误, 请稍后重试")
+      })
+    },
+    loginShopAction() {
+      let flag = false;
+      this.$refs['login'].validate((value) => {
+        if (!value) {
+          flag = true
+        }
+      })
+      if (flag) return
+      request.post(
+          '/shops/login',
+          this.login
+      ).then(
+          function (response) {
+            let token = response.token
+            setLocalStorage('token', token)
+            let user = jwtDecode(token)
+            setLocalStorage('id', user.iss)
+            setLocalStorage('username', user.sub)
           }
       ).catch(error => {
         console.log(error)

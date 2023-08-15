@@ -4,9 +4,9 @@
     <div class="register-body">
       <h1>注 册</h1>
       <el-form :rules="rules" :model="register" ref="register">
-        <el-form-item prop="account">
+        <el-form-item prop="username">
           <el-input
-              v-model="register.account"
+              v-model="register.username"
               type="text"
               maxlength="256"
               minlength="6"
@@ -18,7 +18,7 @@
               v-model="register.password"
               type="password"
               maxlength="512"
-              minlength="8"
+              minlength="6"
               placeholder="用户密码: "
               show-password
           />
@@ -28,7 +28,7 @@
               v-model="register.checkPwd"
               type="password"
               maxlength="512"
-              minlength="8"
+              minlength="6"
               placeholder="确认密码: "
               show-password
               @keydown.enter.native="registerAction"
@@ -45,6 +45,7 @@
       <p>已有账号? 点
         <router-link to="login">这里登录</router-link>
       </p>
+      <p>商铺注册请联系电话<a href="tel:12345678900">12345678900</a></p>
     </div>
   </div>
 </template>
@@ -63,7 +64,7 @@ export default defineComponent({
     RandomTree
   },
   data() {
-    const validateAccount = (rule, value, callback) => {
+    const validateusername = (rule, value, callback) => {
       if (value === '') {
         callback(new Error("请输入注册账号"))
       } else {
@@ -98,13 +99,13 @@ export default defineComponent({
     }
     return {
       register: {
-        account: "",
+        username: "",
         password: "",
         checkPwd: "",
       },
       rules: {
-        account: [
-          {validator: validateAccount, trigger: 'blur'}
+        username: [
+          {validator: validateusername, trigger: 'blur'}
         ],
         password: [
           {validator: validatorPassword, trigger: 'blur'}
