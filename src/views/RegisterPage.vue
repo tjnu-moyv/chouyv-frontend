@@ -1,114 +1,196 @@
 <template>
-  <!-- 注册页面 -->
-  <div id="register">
-    <h2 class="title">注册</h2>
-    <el-form :model="registerForm" :rules="rules" ref="registerForm" label-width="80px" class="form">
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="registerForm.username" autocomplete="off" placeholder="请输入用户名"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="registerForm.password" autocomplete="off" show-password
-                  placeholder="请输入密码"></el-input>
-      </el-form-item>
-      <el-form-item label="确认密码" prop="checkPwd">
-        <el-input type="password" v-model="registerForm.checkPwd" autocomplete="off" show-password
-                  placeholder="请再次输入密码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="register">注册</el-button>
-        <span class="link" @click="goToLogin">已有账号？去登录</span>
-      </el-form-item>
-    </el-form>
+  <div class="register">
+    <random-tree live-ratio="0.65"/>
+    <div class="register-body">
+      <h1>注 册</h1>
+      <el-form :rules="rules" :model="register" ref="register">
+        <el-form-item prop="account">
+          <el-input
+              v-model="register.account"
+              type="text"
+              maxlength="256"
+              minlength="6"
+              placeholder="用户账号: "
+          />
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+              v-model="register.password"
+              type="password"
+              maxlength="512"
+              minlength="8"
+              placeholder="用户密码: "
+              show-password
+          />
+        </el-form-item>
+        <el-form-item prop="checkPwd">
+          <el-input
+              v-model="register.checkPwd"
+              type="password"
+              maxlength="512"
+              minlength="8"
+              placeholder="确认密码: "
+              show-password
+              @keydown.enter.native="registerAction"
+          />
+        </el-form-item>
+      </el-form>
+      <el-button
+          type="primary"
+          round
+          style="width: 60%;"
+          @click="registerAction"
+      >注 册
+      </el-button>
+      <p style="margin-top: 15px;"
+      >已有账号? 点
+        <router-link to="login"
+                     style="text-decoration: none; color:#eee; font-weight: 700"
+        >这里登录
+        </router-link>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
+import RandomTree from "@/components/RandomTree.vue";
 import request from "@/utils/request";
+import {defineComponent} from "vue";
+import {Message} from "element-ui";
 import {setLocalStorage} from "@/utils/local-storage";
 import jwtDecode from "jwt-decode";
 
-export default {
+export default defineComponent({
+  name: "RegisterPage",
+  components: {
+    RandomTree
+  },
   data() {
+    const validateAccount = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error("请输入注册账号"))
+      } else {
+        if (value.length < 6) {
+          callback(new Error("注册账号的长度不能小于6位"))
+        } else {
+          callback()
+        }
+      }
+    }
+    const validatorPassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error("请输入注册密码"))
+      } else {
+        if (value.length < 6) {
+          callback(new Error("注册密码不能小于6位"))
+        }
+        callback()
+      }
+    }
+    const validatorCheckPwd = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error("请输入注册密码"))
+      } else {
+        if (value.length < 6) {
+          callback(new Error("注册密码不能小于6位"))
+        } else if (value !== this.register.password) {
+          callback(new Error("两次输入的密码不相同"))
+        }
+        callback()
+      }
+    }
     return {
-      registerForm: {
-        username: '',
-        password: '',
-        checkPwd: ''
+      register: {
+        account: "",
+        password: "",
+        checkPwd: "",
       },
       rules: {
-        username: [
-          {required: true, message: '请输入用户名', trigger: 'blur'}
+        account: [
+          {validator: validateAccount, trigger: 'blur'}
         ],
         password: [
-          {required: true, message: '请输入密码', trigger: 'blur'},
-          {min: 6, message: '密码不能少于6位', trigger: 'blur'},
-          {pattern: /[!-z]/, message: '密码包含了其他字符', trigger: 'blur'}
+          {validator: validatorPassword, trigger: 'blur'}
         ],
         checkPwd: [
-          {required: true, message: '请再次输入密码', trigger: 'blur'},
-          {
-            validator: (rule, value, callback) => {
-              if (value !== this.registerForm.password) {
-                callback(new Error('两次输入的密码不一致'));
-              } else {
-                callback();
-              }
-            }, trigger: 'blur'
-          }
-        ]
+          {validator: validatorCheckPwd, trigger: 'blur'}
+        ],
       }
     }
   },
   methods: {
-    register() {
-      let flag = true // 是否能通过表单验证
-      this.$refs.registerForm.validate((valid) => {
-        if (!valid) flag = false
-      });
-      if (!flag) return
-      request.post('/students/register', this.registerForm).then(response => {
-        let token = response.token
-        setLocalStorage('token', token)
-        let user = jwtDecode(token)
-        setLocalStorage('id', user.iss)
-        setLocalStorage('username', user.sub)
-      }).catch(error => {
-        console.error(error)
+    registerAction() {
+      let flag = false;
+      this.$refs['register'].validate((value) => {
+        if (!value) {
+          flag = true
+        }
       })
-    },
-    goToLogin() {
-      this.$router.push('/login');
+      if (flag) return
+      request.post(
+          '/users/register',
+          this.register
+      ).then(
+          function (response) {
+            let token = response.token
+            setLocalStorage('token', token)
+            let user = jwtDecode(token)
+            setLocalStorage('id', user.iss)
+            setLocalStorage('username', user.sub)
+            Message.success("注册成功 即将跳转登陆页面")
+            window.location.href = '/todolist/login'
+          }
+      ).catch(function (error) {
+        console.log(error)
+        Message.error("注册发生错误, 请稍后重试")
+      })
     }
   }
-}
+})
 </script>
 
-<style scoped>
-#register {
+<style scoped lang="scss">
+.register {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.title {
-  font-size: 24px;
+  flex-direction: row;
   text-align: center;
-  margin-bottom: 20px;
 }
 
-.form {
+.register-body {
   width: 400px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 64px;
 }
 
-.link {
-  color: #409EFF;
-  cursor: pointer;
+@media screen and (max-width: 768px) {
+  .register {
+    padding: 16px;
+    flex-direction: column;
+  }
+
+  .register-body {
+    width: 300px;
+    padding: 32px;
+  }
+}
+
+.register .register-body h1 {
+  color: #eee;
+}
+
+.register .register-body p {
+  color: #bbb;
+}
+
+.register .register-body .el-input {
+  margin-top: 8%;
+}
+
+.register .register-body .el-button {
+  margin-top: 10%;
+}
+
+:deep(.el-input__inner) {
+  border-radius: 10px;
 }
 </style>
