@@ -16,8 +16,7 @@
                     <div v-for="(address, index) in userInfo.addresses" :key="index" class="address-item">
                         <div class="address-info">
                             <div class="address-label">地址:</div>
-                            <div class="address-value">{{ address.province + address.city + address.district +
-                                address.detail }}</div>
+                            <div class="address-value">{{ address.canteen + address.floor + address.window  }}</div>
                         </div>
                         <div class="address-info">
                             <div class="address-label">手机号:</div>
@@ -35,25 +34,24 @@
                 <el-button v-if="!editMode" type="primary" @click="editMode = true">编辑</el-button>
                 <el-button v-else type="primary" @click="saveChanges">保存</el-button>
                 <el-button type="primary" @click="addAddress">新增地址</el-button>
-                <el-button type="primary" @click="goToSettings">设置</el-button>
+                <el-button type="primary" @click="goToSettings">修改密码</el-button>
             </el-form-item>
         </el-form>
 
         <el-dialog :visible="dialogVisible" title="编辑地址" @close="closeDialog">
             <el-form :model="editAddressForm" label-width="100px">
                 <el-form-item label="地址">
-                    <el-select v-model="editAddressForm.province" placeholder="请选择省份" @change="handleProvinceChange">
-                        <el-option v-for="province in provinces" :key="province" :label="province"
-                            :value="province"></el-option>
+                    <el-select v-model="editAddressForm.canteen" placeholder="请选择食堂" @change="handlecanteenChange">
+                        <el-option v-for="canteen in canteens" :key="canteen" :label="canteen"
+                            :value="canteen"></el-option>
                     </el-select>
-                    <el-select v-model="editAddressForm.city" placeholder="请选择城市" @change="handleCityChange">
-                        <el-option v-for="city in cities" :key="city" :label="city" :value="city"></el-option>
+                    <el-select v-model="editAddressForm.floor" placeholder="请选择楼层" @change="handlefloorChange">
+                        <el-option v-for="floor in cities" :key="floor" :label="floor" :value="floor"></el-option>
                     </el-select>
-                    <el-select v-model="editAddressForm.district" placeholder="请选择区域">
-                        <el-option v-for="district in districts" :key="district" :label="district"
-                            :value="district"></el-option>
+                    <el-select v-model="editAddressForm.window" placeholder="请选择窗口">
+                        <el-option v-for="window in windows" :key="window" :label="window"
+                            :value="window"></el-option>
                     </el-select>
-                    <el-input v-model="editAddressForm.detail" placeholder="请输入详细地址"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号">
                     <el-input v-model="editAddressForm.phoneNumber"></el-input>
@@ -85,17 +83,15 @@ export default {
                 username: 'john123',
                 addresses: [
                     {
-                        province: '省1',
-                        city: '市1',
-                        district: '区1',
-                        detail: '123 Street',
+                        canteen: '一食堂',
+                        floor: '一楼',
+                        window: '48号窗口',
                         phoneNumber: '1234567890',
                     },
                     {
-                        province: '省2',
-                        city: '市2',
-                        district: '区2',
-                        detail: '456 Street',
+                        canteen: '二食堂',
+                        floor: '二楼',
+                        window: '3号窗口',
                         phoneNumber: '0987654321',
                     },
                 ],
@@ -103,15 +99,14 @@ export default {
             editMode: false,
             dialogVisible: false,
             editAddressForm: {
-                province: '',
-                city: '',
-                district: '',
-                detail: '',
+                canteen: '',
+                floor: '',
+                window: '',
                 phoneNumber: '',
             },
-            provinces: ['省1', '省2', '省3'],
+            canteens: ['一食堂', '二食堂', '三食堂'],
             cities: [],
-            districts: [],
+            windows: [],
             avatarDialogVisible: false,
             newAvatar: '',
         };
@@ -120,10 +115,9 @@ export default {
         editAddress(index) {
             const address = this.userInfo.addresses[index];
             this.editAddressForm = {
-                province: address.province,
-                city: address.city,
-                district: address.district,
-                detail: address.detail,
+                canteen: address.canteen,
+                floor: address.floor,
+                window: address.window,
                 phoneNumber: address.phoneNumber,
             };
             this.dialogVisible = true;
@@ -133,43 +127,39 @@ export default {
         },
         addAddress() {
             this.editAddressForm = {
-                province: '',
-                city: '',
-                district: '',
-                detail: '',
+                canteen: '',
+                floor: '',
+                window: '',
                 phoneNumber: '',
             };
             this.dialogVisible = true;
         },
         saveAddress() {
             if (
-                this.editAddressForm.province &&
-                this.editAddressForm.city &&
-                this.editAddressForm.district &&
-                this.editAddressForm.detail &&
+                this.editAddressForm.canteen &&
+                this.editAddressForm.floor &&
+                this.editAddressForm.window &&
                 this.editAddressForm.phoneNumber.length === 11
             ) {
                 if (this.dialogVisible) {
                     // 编辑地址
                     const index = this.userInfo.addresses.findIndex(
-                        (address) => address.province === this.editAddressForm.province && address.city === this.editAddressForm.city && address.district === this.editAddressForm.district && address.detail === this.editAddressForm.detail
+                        (address) => address.canteen === this.editAddressForm.canteen && address.floor === this.editAddressForm.floor && address.window === this.editAddressForm.window
                     );
                     if (index !== -1) {
                         this.userInfo.addresses[index] = {
-                            province: this.editAddressForm.province,
-                            city: this.editAddressForm.city,
-                            district: this.editAddressForm.district,
-                            detail: this.editAddressForm.detail,
+                            canteen: this.editAddressForm.canteen,
+                            floor: this.editAddressForm.floor,
+                            window: this.editAddressForm.window,
                             phoneNumber: this.editAddressForm.phoneNumber,
                         };
                     }
                 } else {
                     // 新增地址
                     this.userInfo.addresses.push({
-                        province: this.editAddressForm.province,
-                        city: this.editAddressForm.city,
-                        district: this.editAddressForm.district,
-                        detail: this.editAddressForm.detail,
+                        canteen: this.editAddressForm.canteen,
+                        floor: this.editAddressForm.floor,
+                        window: this.editAddressForm.window,
                         phoneNumber: this.editAddressForm.phoneNumber,
                     });
                 }
@@ -179,47 +169,40 @@ export default {
         closeDialog() {
             this.dialogVisible = false;
         },
-        handleProvinceChange(province) {
-            // 根据省份选择城市
-            this.cities = this.getCitiesByProvince(province);
-            // 清空城市和区域
-            this.editAddressForm.city = '';
-            this.editAddressForm.district = '';
+        handlecanteenChange(canteen) {
+            this.cities = this.getCitiesBycanteen(canteen);
+            this.editAddressForm.floor = '';
+            this.editAddressForm.window = '';
         },
-        handleCityChange(city) {
-            // 根据城市选择区域
-            this.districts = this.getDistrictsByCity(city);
+        handlefloorChange(floor) {
+            this.windows = this.getwindowsByfloor(floor);
             // 清空区域
-            this.editAddressForm.district = '';
+            this.editAddressForm.window = '';
         },
-        getCitiesByProvince(province) {
-            // 根据省份获取城市数据
-            // 根据实际情况替换成真实数据
-            if (province === '省1') {
-                return ['市1', '市2', '市3'];
-            } else if (province === '省2') {
-                return ['市4', '市5', '市6'];
-            } else if (province === '省3') {
-                return ['市7', '市8', '市9'];
+        getCitiesBycanteen(canteen) {
+            if (canteen === '一食堂') {
+                return ['一楼', '二楼', '三楼'];
+            } else if (canteen === '二食堂') {
+                return ['一楼', '二楼', '三楼'];
+            } else if (canteen === '三食堂') {
+                return ['一楼', '二楼', '三楼'];
             } else {
                 return [];
             }
         },
-        getDistrictsByCity(city) {
-            // 根据城市获取区域数据
-            // 根据实际情况替换成真实数据
-            if (city === '市1') {
-                return ['区1', '区2', '区3'];
-            } else if (city === '市2') {
-                return ['区4', '区5', '区6'];
-            } else if (city === '市3') {
-                return ['区7', '区8', '区9'];
+        getwindowsByfloor(floor) {
+            if (floor === '一楼') {
+                return ['1号窗口', '2号窗口', '3号窗口'];
+            } else if (floor === '二楼') {
+                return ['1号窗口', '2号窗口', '3号窗口'];
+            } else if (floor === '三楼') {
+                return ['1号窗口', '2号窗口', '3号窗口'];
             } else {
                 return [];
             }
         },
         goToSettings() {
-            this.$router.push('/student/profile/settings');
+            this.$router.push('/student/settings');
         },
         showAvatarDialog() {
             this.avatarDialogVisible = true;
