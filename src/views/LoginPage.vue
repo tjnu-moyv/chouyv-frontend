@@ -119,7 +119,7 @@ export default defineComponent({
               return
             }
             setLocalStorage('token', res.data.data)
-            window.location.href = '/todolist'
+            window.location.href = '/student/shops'
           }
       ).catch(error => {
         console.log(error)
