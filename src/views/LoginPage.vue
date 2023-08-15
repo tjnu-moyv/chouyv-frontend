@@ -1,143 +1,209 @@
 <template>
-  <!-- 登录页面 -->
-  <div id="login">
-    <h2 class="title">登录</h2>
-    <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="80px" class="form">
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="loginForm.username" autocomplete="off" placeholder="请输入用户名"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="loginForm.password" autocomplete="off" show-password
-                  placeholder="请输入密码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="login" class="login-btn">登录</el-button>
-        <span class="link" @click="goToRegister">没有账号？去注册</span>
-      </el-form-item>
-    </el-form>
+  <div class="login">
+    <random-tree live-ratio="0.6"/>
+    <div class="login-body">
+      <h1>登 录</h1>
+      <p>请使用用户中心账户登录</p>
+      <el-form :rules="rules" ref="login" :model="login">
+        <el-form-item prop="username">
+          <el-input
+              v-model="login.username"
+              type="text"
+              maxlength="256"
+              minlength="6"
+              placeholder="用户账号: "
+              autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+              v-model="login.password"
+              type="password"
+              maxlength="512"
+              minlength="6"
+              placeholder="用户密码: "
+              autocomplete="off"
+              show-password
+              @keydown.enter.native="loginAction"
+          />
+        </el-form-item>
+      </el-form>
+      <el-button
+          type="primary"
+          round
+          style="width: 60%;"
+          @click="loginStudentAction"
+      >学 生 登 录
+      </el-button>
+      <el-button
+          type="primary"
+          round
+          style="width: 60%;"
+          @click="loginShopAction"
+      >商 铺 登 录
+      </el-button>
+      <p>没有账号? 点
+        <router-link to="register">这里注册</router-link>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
+import RandomTree from "@/components/RandomTree.vue";
 import request from "@/utils/request";
+import {Message} from "element-ui";
+import {setLocalStorage} from "@/utils/local-storage";
+import {defineComponent} from "vue";
+import jwtDecode from "jwt-decode";
 
-export default {
+export default defineComponent({
+  name: "LoginPage",
+  components: {RandomTree},
   data() {
+    const username = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error("请输入登录账号"))
+      } else {
+        if (value.length < 6) {
+          callback(new Error("登录账号的长度不能小于6位"))
+        } else if (value[0] >= '0' && value[0] <= '9') {
+          callback(new Error("登录账号不能以数字开头"))
+        } else {
+          callback()
+        }
+      }
+    }
+    const password = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error("请输入登录密码"))
+      } else {
+        if (value.length < 6) {
+          callback(new Error("登录密码不能小于6位"))
+        }
+        callback()
+      }
+    }
     return {
-      loginForm: {
-        username: '',
-        password: ''
+      login: {
+        username: "",
+        password: ""
       },
       rules: {
         username: [
-          {required: true, message: '请输入用户名', trigger: 'blur'}
+          {validator: username, trigger: 'blur'}
         ],
         password: [
-          {required: true, message: '请输入密码', trigger: 'blur'},
-          {min: 6, message: '密码不能少于6位', trigger: 'blur'},
-          {pattern: /[!-z]/, message: '密码包含了其他字符', trigger: 'blur'}
-        ],
+          {validator: password, trigger: 'blur'}
+        ]
       }
     }
   },
   methods: {
-    login() {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          // 发送登录请求
-          const formData = {
-            username: this.loginForm.username,
-            password: this.loginForm.password
-          };
-          request.post('/students/login', formData)
-              .then(response => {
-                // 登录成功的处理逻辑
-                console.log('登录成功', response);
-                // 可以进行页面跳转或其他操作
-              })
-              .catch(error => {
-                // 登录失败的处理逻辑
-                console.log('登录失败', error);
-                // 可以进行错误提示等操作
-              });
-        } else {
-          console.log('登录失败');
-          return false;
+    loginStudentAction() {
+      let flag = false;
+      this.$refs['login'].validate((value) => {
+        if (!value) {
+          flag = true
         }
-      });
+      })
+      if (flag) return
+      request.post(
+          '/students/login',
+          this.login
+      ).then(
+          function (res) {
+            if (res.data.code > 0) {
+              console.log(res)
+              Message.error("登录错误: " + res.data.message + ' ' + res.data.description)
+              return
+            }
+            setLocalStorage('token', res.data.data)
+            window.location.href = '/todolist'
+          }
+      ).catch(error => {
+        console.log(error)
+        Message.error("登录发生错误, 请稍后重试")
+      })
     },
-    goToRegister() {
-      this.$router.push('/register');
-    },
-    resizeHandler() {
-      const loginDiv = document.getElementById('login');
-      const windowHeight = window.innerHeight;
-      const loginHeight = loginDiv.offsetHeight;
-      const marginTop = (windowHeight - loginHeight) / 2;
-      loginDiv.style.marginTop = marginTop + 'px';
+    loginShopAction() {
+      let flag = false;
+      this.$refs['login'].validate((value) => {
+        if (!value) {
+          flag = true
+        }
+      })
+      if (flag) return
+      request.post(
+          '/shops/login',
+          this.login
+      ).then(
+          function (response) {
+            let token = response.token
+            setLocalStorage('token', token)
+            let user = jwtDecode(token)
+            setLocalStorage('id', user.iss)
+            setLocalStorage('username', user.sub)
+          }
+      ).catch(error => {
+        console.log(error)
+        Message.error("登录发生错误, 请稍后重试")
+      })
     }
-  },
-  mounted() {
-    this.resizeHandler();
-    window.addEventListener('resize', this.resizeHandler);
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.resizeHandler);
   }
-}
+})
 </script>
 
-<style scoped>
-#login {
+<style scoped lang="scss">
+.login {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f2f2f2;
-  margin-top: 0;
-}
-
-.title {
-  font-size: 28px;
+  flex-direction: row;
   text-align: center;
-  margin-bottom: 30px;
-  color: #333;
+
+  .login-body {
+    width: 400px;
+    padding: 64px;
+
+    h1 {
+      color: #eee;
+    }
+
+    p {
+      color: #bbb;
+      margin-top: 15px;
+
+      a {
+        text-decoration: none;
+        color: #eee;
+        font-weight: 700
+      }
+    }
+
+    .el-input {
+      margin-top: 8%;
+    }
+
+    .el-button {
+      margin-top: 10%;
+    }
+
+  }
 }
 
-.form {
-  width: 400px;
-  padding: 40px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+@media screen and (max-width: 768px) {
+  .login {
+    padding: 16px;
+    flex-direction: column;
+
+    .login-body {
+      width: 300px;
+      padding: 32px;
+    }
+
+  }
 }
 
-.link {
-  color: #409EFF;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.login-btn {
-  width: 100%;
-  margin-top: 20px;
-}
-
-.el-form-item__error {
-  color: #f56c6c;
-  font-size: 12px;
-}
-
-/* 修改element组件样式 */
-.el-input {
-  width: 100%;
-  border-radius: 4px;
-}
-
-.el-button {
-  width: 100%;
-  border-radius: 4px;
+:deep(.el-input__inner) {
+  border-radius: 10px;
 }
 </style>

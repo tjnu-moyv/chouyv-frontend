@@ -2,6 +2,11 @@
 
 const routes = [
     {
+        // 重定向到登录页面
+        path: '/',
+        redirect: '/login'
+    },
+    {
         // 登录页面路由
         path: '/',
         component: () => import('@/views/LoginPage.vue')

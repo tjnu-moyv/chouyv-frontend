@@ -1,3 +1,11 @@
+import dayjs from "dayjs";
+
+/**
+ * 默认过期时间
+ * @type {number}
+ */
+const overdueSecondDefault = dayjs().hour(2).unix()
+
 /**
  * 设置localStorage
  * <li>只有key不为空时将key对应的值清空</li>
@@ -12,8 +20,7 @@ const setLocalStorage = (key, value, overdueSecond) => {
         // 移除
         localStorage.removeItem(key);
     } else {
-        const overdue = overdueSecond || 3600000;
-        const exp = new Date().getTime() + overdue;
+        const exp = overdueSecond || overdueSecondDefault;
         localStorage[key] = JSON.stringify({
             value,
             exp
