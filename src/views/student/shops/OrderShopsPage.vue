@@ -7,7 +7,7 @@
             <el-menu class="navigation" background-color="#f8f8f8" text-color="#333" active-text-color="#409EFF"
                 @select="handleMenuSelect" unique-opened router>
                 <el-submenu index="1">
-                    <template slot="title">
+                    <template>
                         <i class="el-icon-location"></i>一食堂
                     </template>
                     <el-menu-item index="1-1" @click="goToOrderFoodPage('一食堂')">一楼</el-menu-item>
@@ -15,7 +15,7 @@
                     <el-menu-item index="1-3" @click="goToOrderFoodPage('一食堂')">三楼</el-menu-item>
                 </el-submenu>
                 <el-submenu index="2">
-                    <template slot="title">
+                    <template>
                         <i class="el-icon-location"></i>二食堂
                     </template>
                     <el-menu-item index="2-1" @click="goToOrderFoodPage('二食堂')">一楼</el-menu-item>
@@ -23,7 +23,7 @@
                     <el-menu-item index="2-3" @click="goToOrderFoodPage('二食堂')">三楼</el-menu-item>
                 </el-submenu>
                 <el-submenu index="3">
-                    <template slot="title">
+                    <template>
                         <i class="el-icon-location"></i>三食堂
                     </template>
                     <el-menu-item index="3-1" @click="goToOrderFoodPage('三食堂')">一楼</el-menu-item>
@@ -56,15 +56,15 @@
                 </el-col>
             </el-row>
             <el-dropdown v-model="isDropdownShow" placement="bottom-start">
-                <el-button type="text" slot="trigger">显示搜索结果</el-button>
-                <el-dropdown-menu slot="dropdown">
+                <el-button type="text">显示搜索结果</el-button>
+                <el-dropdown-menu>
                     <el-dropdown-item v-for="(result, index) in searchResults" :key="index">{{ result }}</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
     </div>
 </template>
-  
+
 <script>
 export default {
     data() {
@@ -115,7 +115,7 @@ export default {
     }
 };
 </script>
-  
+
 <style scoped>
 #orderShops {
     display: flex;
