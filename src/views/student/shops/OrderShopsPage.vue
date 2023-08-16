@@ -3,32 +3,32 @@
     <div id="orderShops">
         <!-- 左边部分 -->
         <div class="left-section">
-            <div class="avatar"></div>
+            <div class="avatar" @click="goToProfilePage"></div>
             <el-menu class="navigation" background-color="#f8f8f8" text-color="#333" active-text-color="#409EFF"
                 @select="handleMenuSelect" unique-opened router>
                 <el-submenu index="1">
                     <template slot="title">
                         <i class="el-icon-location"></i>一食堂
                     </template>
-                    <el-menu-item index="1-1">一楼</el-menu-item>
-                    <el-menu-item index="1-2">二楼</el-menu-item>
-                    <el-menu-item index="1-3">三楼</el-menu-item>
+                    <el-menu-item index="1-1" @click="goToOrderFoodPage('一食堂')">一楼</el-menu-item>
+                    <el-menu-item index="1-2" @click="goToOrderFoodPage('一食堂')">二楼</el-menu-item>
+                    <el-menu-item index="1-3" @click="goToOrderFoodPage('一食堂')">三楼</el-menu-item>
                 </el-submenu>
                 <el-submenu index="2">
                     <template slot="title">
                         <i class="el-icon-location"></i>二食堂
                     </template>
-                    <el-menu-item index="2-1">一楼</el-menu-item>
-                    <el-menu-item index="2-2">二楼</el-menu-item>
-                    <el-menu-item index="2-3">三楼</el-menu-item>
+                    <el-menu-item index="2-1" @click="goToOrderFoodPage('二食堂')">一楼</el-menu-item>
+                    <el-menu-item index="2-2" @click="goToOrderFoodPage('二食堂')">二楼</el-menu-item>
+                    <el-menu-item index="2-3" @click="goToOrderFoodPage('二食堂')">三楼</el-menu-item>
                 </el-submenu>
                 <el-submenu index="3">
                     <template slot="title">
                         <i class="el-icon-location"></i>三食堂
                     </template>
-                    <el-menu-item index="3-1">一楼</el-menu-item>
-                    <el-menu-item index="3-2">二楼</el-menu-item>
-                    <el-menu-item index="3-3">三楼</el-menu-item>
+                    <el-menu-item index="3-1" @click="goToOrderFoodPage('三食堂')">一楼</el-menu-item>
+                    <el-menu-item index="3-2" @click="goToOrderFoodPage('三食堂')">二楼</el-menu-item>
+                    <el-menu-item index="3-3" @click="goToOrderFoodPage('三食堂')">三楼</el-menu-item>
                 </el-submenu>
             </el-menu>
         </div>
@@ -46,7 +46,7 @@
             </div>
             <el-row class="shop-list">
                 <el-col :span="8" v-for="(shop, index) in shopList" :key="index">
-                    <el-card shadow="hover" class="shop-item">
+                    <el-card shadow="hover" class="shop-item" @click="goToOrderFoodPage(shop.name)">
                         <div class="shop-image" :style="{ backgroundImage: `url(${shop.image})` }"></div>
                         <div class="shop-info">
                             <h3>{{ shop.name }}</h3>
@@ -98,6 +98,12 @@ export default {
             // 根据选中的菜单项更新商铺信息
             // ...
         },
+        goToProfilePage() {
+            this.$router.push("/student/Profile");
+        },
+        goToOrderFoodPage(canteen) {
+            this.$router.push(`/student/shops/orderFood/${canteen}`);
+        },
         search() {
             console.log("搜索内容：", this.searchContent);
             console.log("搜索范围：", this.searchRange);
@@ -131,6 +137,7 @@ export default {
     border-radius: 50%;
     background-color: gray;
     margin-bottom: 20px;
+    cursor: pointer;
 }
 
 .navigation {
@@ -160,6 +167,7 @@ export default {
     display: flex;
     align-items: center;
     margin: 20px;
+    cursor: pointer;
 }
 
 .shop-image {
@@ -178,4 +186,3 @@ export default {
     color: #333;
 }
 </style>
-  
