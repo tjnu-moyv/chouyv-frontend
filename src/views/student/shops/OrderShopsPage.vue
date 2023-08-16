@@ -8,8 +8,7 @@
                 @select="handleMenuSelect" unique-opened router>
                 <el-submenu index="1">
                     <template slot="title">
-                        <i class="el-icon-location"></i>
-                        一食堂
+                        <i class="el-icon-location"></i>一食堂
                     </template>
                     <el-menu-item index="1-1">一楼</el-menu-item>
                     <el-menu-item index="1-2">二楼</el-menu-item>
@@ -17,8 +16,7 @@
                 </el-submenu>
                 <el-submenu index="2">
                     <template slot="title">
-                        <i class="el-icon-location"></i>
-                        二食堂
+                        <i class="el-icon-location"></i>二食堂
                     </template>
                     <el-menu-item index="2-1">一楼</el-menu-item>
                     <el-menu-item index="2-2">二楼</el-menu-item>
@@ -26,8 +24,7 @@
                 </el-submenu>
                 <el-submenu index="3">
                     <template slot="title">
-                        <i class="el-icon-location"></i>
-                        三食堂
+                        <i class="el-icon-location"></i>三食堂
                     </template>
                     <el-menu-item index="3-1">一楼</el-menu-item>
                     <el-menu-item index="3-2">二楼</el-menu-item>
@@ -40,9 +37,9 @@
             <div class="search-bar">
                 <el-select v-model="searchRange" placeholder="请选择搜索范围">
                     <el-option label="全部" value="all"></el-option>
-                    <el-option label="一楼" value="floor1"></el-option>
-                    <el-option label="二楼" value="floor2"></el-option>
-                    <el-option label="三楼" value="floor3"></el-option>
+                    <el-option label="一食堂" value="canteen1"></el-option>
+                    <el-option label="二食堂" value="canteen2"></el-option>
+                    <el-option label="三食堂" value="canteen3"></el-option>
                 </el-select>
                 <el-input v-model="searchContent" placeholder="请输入搜索内容"></el-input>
                 <el-button type="primary" @click="search">搜索</el-button>
@@ -72,23 +69,23 @@
 export default {
     data() {
         return {
-            searchRange: 'all',
-            searchContent: '',
+            searchRange: "all",
+            searchContent: "",
             shopList: [
                 {
-                    name: '餐厅名称1',
-                    description: '餐厅介绍1',
-                    image: 'https://via.placeholder.com/100'
+                    name: "餐厅名称1",
+                    description: "餐厅介绍1",
+                    image: "https://via.placeholder.com/100"
                 },
                 {
-                    name: '餐厅名称2',
-                    description: '餐厅介绍2',
-                    image: 'https://via.placeholder.com/100'
+                    name: "餐厅名称2",
+                    description: "餐厅介绍2",
+                    image: "https://via.placeholder.com/100"
                 },
                 {
-                    name: '餐厅名称3',
-                    description: '餐厅介绍3',
-                    image: 'https://via.placeholder.com/100'
+                    name: "餐厅名称3",
+                    description: "餐厅介绍3",
+                    image: "https://via.placeholder.com/100"
                 }
             ],
             isDropdownShow: false,
@@ -97,16 +94,16 @@ export default {
     },
     methods: {
         handleMenuSelect(index) {
-            console.log('选中了菜单项：', index);
+            console.log("选中了菜单项：", index);
             // 根据选中的菜单项更新商铺信息
             // ...
         },
         search() {
-            console.log('搜索内容：', this.searchContent);
-            console.log('搜索范围：', this.searchRange);
+            console.log("搜索内容：", this.searchContent);
+            console.log("搜索范围：", this.searchRange);
             // 根据搜索内容和范围进行搜索，并更新搜索结果
             // ...
-            this.searchResults = ['搜索结果1', '搜索结果2', '搜索结果3'];
+            this.searchResults = ["搜索结果1", "搜索结果2", "搜索结果3"];
             this.isDropdownShow = true;
         }
     }
