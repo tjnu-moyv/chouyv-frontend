@@ -34,17 +34,17 @@ const routes = [
                     {
                         // 选择菜品页面
                         path: 'orderFood',
-                        component: () => import('@/views/student/shops/food/OrderFoodPage.vue'),
+                        component: () => import('@/views/student/shops/OrderFoodPage.vue'),
                     },
                     {
                         // 订单详情页面
                         path: 'orderDetailsPage',
-                        component: () => import('@/views/student/shops/food/OrderDetailsPage.vue'),
+                        component: () => import('@/views/student/shops/OrderDetailsPage.vue'),
                     },
                     {
                         // 支付之后的订单页面页面
                         path: 'PaymentConfirmationPage',
-                        component: () => import('@/views/student/shops/food/PaymentConfirmationPage.vue'),
+                        component: () => import('@/views/student/shops/PaymentConfirmationPage.vue'),
                     },
                 ]
             },
