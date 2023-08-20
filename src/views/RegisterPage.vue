@@ -64,7 +64,7 @@ export default defineComponent({
     RandomTree
   },
   data() {
-    const validateusername = (rule, value, callback) => {
+    const validateUsername = (rule, value, callback) => {
       if (value === '') {
         callback(new Error("请输入注册账号"))
       } else {
@@ -105,7 +105,7 @@ export default defineComponent({
       },
       rules: {
         username: [
-          {validator: validateusername, trigger: 'blur'}
+          {validator: validateUsername, trigger: 'blur'}
         ],
         password: [
           {validator: validatorPassword, trigger: 'blur'}
@@ -126,7 +126,7 @@ export default defineComponent({
       })
       if (flag) return
       request.post(
-          '/users/register',
+          '/students/register',
           this.register
       ).then(
           function (response) {
@@ -136,7 +136,7 @@ export default defineComponent({
             setLocalStorage('id', user.iss)
             setLocalStorage('username', user.sub)
             Message.success("注册成功 即将跳转登陆页面")
-            window.location.href = '/todolist/login'
+            window.location.href = '/login'
           }
       ).catch(function (error) {
         console.log(error)
