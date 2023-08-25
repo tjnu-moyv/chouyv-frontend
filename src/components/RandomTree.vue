@@ -1,20 +1,40 @@
-<template>
-  <div class="random-tree">
-    <canvas :width="width" :height="height" ref="canvas"></canvas>
-  </div>
-</template>
-
 <script setup lang="ts">
 import {onMounted, ref} from 'vue';
 
-const width = 180;
-const height = 180;
-const thickRatio = 0.8;
-const lengthRatio = 0.9;
-const liveRatio = 0.5;
-const flowerOfEndRatio = 1;
-const flowerOfMiddleRatio = 0.1;
-const maxDirChildren = 30;
+const props = defineProps({
+  width: {
+    type: Number,
+    default: 180
+  },
+  height: {
+    type: Number,
+    default: 180
+  },
+  thickRatio: {
+    type: Number,
+    default: 0.8
+  },
+  lengthRatio: {
+    type: Number,
+    default: 0.9
+  },
+  liveRatio: {
+    type: Number,
+    default: 0.5
+  },
+  flowerOfEndRatio: {
+    type: Number,
+    default: 1
+  },
+  flowerOfMiddleRatio: {
+    type: Number,
+    default: 0.1
+  },
+  maxDirChildren: {
+    type: Number,
+    default: 30
+  }
+});
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 
@@ -26,6 +46,16 @@ const drawFlower = (x: number, y: number, context: CanvasRenderingContext2D) => 
   context.closePath();
 };
 
+/**
+ * 绘画一个树干并递归延展
+ *
+ * @param v0x
+ * @param v0y
+ * @param thick
+ * @param length
+ * @param dir
+ * @param context
+ */
 const draw = (
     v0x: number,
     v0y: number,
@@ -34,15 +64,15 @@ const draw = (
     dir: number,
     context: CanvasRenderingContext2D
 ) => {
-  if (thick < 15 && Math.random() < (1 - liveRatio)) {
-    if (Math.random() < flowerOfMiddleRatio) {
+  if (thick < 15 && Math.random() < (1 - props.liveRatio)) {
+    if (Math.random() < props.flowerOfMiddleRatio) {
       // 在树枝末端绘制花朵
       drawFlower(v0x, v0y, context);
     }
     return;
   }
   if (thick < 1) {
-    if (Math.random() < flowerOfEndRatio) {
+    if (Math.random() < props.flowerOfEndRatio) {
       // 在树枝末端绘制花朵
       drawFlower(v0x, v0y, context);
     }
@@ -60,17 +90,17 @@ const draw = (
   draw(
       v1x,
       v1y,
-      thick * thickRatio,
-      length * lengthRatio,
-      dir + maxDirChildren * Math.random(),
+      thick * props.thickRatio,
+      length * props.lengthRatio,
+      dir + props.maxDirChildren * Math.random(),
       context
   );
   draw(
       v1x,
       v1y,
-      thick * thickRatio,
-      length * lengthRatio,
-      dir - maxDirChildren * Math.random(),
+      thick * props.thickRatio,
+      length * props.lengthRatio,
+      dir - props.maxDirChildren * Math.random(),
       context
   );
 };
@@ -78,11 +108,17 @@ const draw = (
 onMounted(() => {
   const context = canvas.value?.getContext('2d');
   if (!context) return;
-  context.translate(width / 2, height);
+  context.translate(props.width / 2, props.height);
   context.scale(0.2, -0.2);
   draw(0, 0, 30, 80, 90 + (Math.random() - 0.5) * 25, context);
 });
 </script>
+
+<template>
+  <div class="random-tree">
+    <canvas :width="width" :height="height" ref="canvas"></canvas>
+  </div>
+</template>
 
 <style scoped>
 .random-tree {
