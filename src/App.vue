@@ -1,15 +1,16 @@
-<template>
-  <div id="app">
-    <router-view/>
-  </div>
-</template>
+<script setup lang="ts">
+import RandomTree from "@/components/RandomTree.vue";
+import dayjs from "dayjs";
+import {ref} from "vue";
 
-<style>
-#app {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(45deg, rgba(64, 158, 255, 0.3), #0b57a6);
+let randomTreeKeyToClickReload = ref(dayjs().unix())
+
+const reloadRandomTree = () => {
+  randomTreeKeyToClickReload.value += 1
 }
-</style>
+
+</script>
+
+<template>
+  <RandomTree :key="randomTreeKeyToClickReload" @click="reloadRandomTree"/>
+</template>
