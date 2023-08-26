@@ -23,13 +23,13 @@ Vue，这是一个很好的参考，可以避免错误、不必要的讨论以�
 这些规则有助于防止错误，因此务必学习并遵循它们。可能会存在一些例外情况，但应该非常罕见，只有那些精通 JavaScript 和 Vue
 的专家才能进行例外情况的处理。
 
-- [查看所有优先级 A 规则](./rules-essential)
+- [查看所有优先级 A 规则](./rules-essential.md)
 
 ### 优先级 B：强烈推荐{#priority-b-strongly-recommended}
 
 这些规则在大多数项目中都能提高可读性和/或开发人员体验。如果违反这些规则，您的代码仍然可以运行，但违规应该很少且合理。
 
-- [查看所有优先级 B 规则](./rules-strongly-recommended)
+- [查看所有优先级 B 规则](./rules-strongly-recommended.md)
 
 ### 优先级 C：推荐{#priority-c-recommended}
 
@@ -39,10 +39,10 @@ Vue，这是一个很好的参考，可以避免错误、不必要的讨论以�
 2. 能够无需修改即可复制并粘贴大多数社区代码示例
 3. 常常发现新加入的团队成员已经习惯了您偏好的编码风格，至少在 Vue 方面如此
 
-- [查看所有优先级 C 规则](./rules-recommended)
+- [查看所有优先级 C 规则](./rules-recommended.md)
 
 ### 优先级 D：谨慎使用{#priority-d-use-with-caution}
 
 Vue 的一些功能存在于少数边缘案例或更平滑地从遗留代码库迁移。然而，如果过度使用，它们可能会使您的代码变得更难以维护，甚至成为错误的来源。这些规则将重点放在潜在风险的功能上，描述了何时以及为何应该避免使用它们。
 
-- [查看所有优先级 D 规则](./rules-use-with-caution)
+- [查看所有优先级 D 规则](./rules-use-with-caution.md)
