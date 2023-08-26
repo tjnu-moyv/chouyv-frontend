@@ -1,6 +1,6 @@
-import type {ResponseData} from "../module/ResponseData";
-import type {Order} from "../module/Order";
-import type {ShopInfo} from "../module/ShopInfo";
+import type {ResponseData} from "@/api/module/ResponseData";
+import type {Order} from "@/api/module/Order";
+import type {ShopInfo} from "@/api/module/ShopInfo";
 
 export interface RetrieveAllAvailableOrdersResponse extends ResponseData {
   data: {
