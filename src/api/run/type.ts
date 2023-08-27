@@ -1,8 +1,8 @@
-import type {ResponseData} from "@/api/module/ResponseData";
+import type {BaseVO} from "@/api/module/BaseVO";
 import type {Order} from "@/api/module/Order";
 import type {ShopInfo} from "@/api/module/ShopInfo";
 
-export interface RetrieveAllAvailableOrdersResponse extends ResponseData {
+export interface RetrieveAllAvailableOrdersResponse extends BaseVO {
   data: {
     /**
      * 当前页 默认1

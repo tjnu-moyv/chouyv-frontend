@@ -1,4 +1,4 @@
-import type {ResponseData} from "@/api/module/ResponseData";
+import type {BaseVO} from "@/api/module/BaseVO";
 
 export interface AddShoppingInfoDTO {
   name: string,
@@ -6,7 +6,7 @@ export interface AddShoppingInfoDTO {
   location: string
 }
 
-export interface AddShoppingInfoVO extends ResponseData {
+export interface AddShoppingInfoVO extends BaseVO {
   data: number
 }
 

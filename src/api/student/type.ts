@@ -6,6 +6,12 @@ export interface StudentLogin {
   password: string
 }
 
-export interface StudentAuthResponse extends ResponseData {
+export interface StudentRegisterDTO {
+  username: string,
+  password: string,
+  checkPwd: string,
+}
+
+export interface StudentAuthResponse extends BaseVO {
   data: Auth
 }
