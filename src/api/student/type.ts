@@ -2,6 +2,7 @@ import type {BaseVO} from "@/api/module/BaseVO";
 import type {Auth} from "@/api/module/Auth";
 import type {Order} from "@/api/module/Order";
 import type {OrderProductsItem} from "@/api/module/OrderProductsItem";
+import type {ShopInfo} from "@/api/module/ShopInfo";
 
 export interface StudentLoginDTO {
   username: string,
@@ -12,6 +13,10 @@ export interface StudentRegisterDTO {
   username: string,
   password: string,
   checkPwd: string,
+}
+
+export interface StudentInfoVO extends BaseVO {
+  data: ShopInfo
 }
 
 export interface GenerateOrderDTO {

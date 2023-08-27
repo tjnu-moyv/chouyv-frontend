@@ -6,10 +6,10 @@ import type {
   GenerateOrderVO,
   GetOrderInfoVO,
   StudentAuthVO,
+  StudentInfoVO,
   StudentLoginDTO,
   StudentRegisterDTO
 } from "@/api/student/type";
-import type {StudentInfo} from "@/api/module/StudentInfo";
 
 enum StudentAPI {
   Login = '/students/login',
@@ -37,7 +37,7 @@ export const requestStudentRegister = (data: StudentRegisterDTO) => request.post
 /**
  * 获取学生信息
  */
-export const requestStudentInfo = () => request.get<any, StudentInfo>(StudentAPI.GetInfo)
+export const requestStudentInfo = () => request.get<any, StudentInfoVO>(StudentAPI.GetInfo)
 
 /**
  * 查询订单情况
