@@ -1,27 +1,33 @@
 <script setup lang="ts">
 import ReloadContainer from "@/components/ReloadContainer.vue";
 import RandomTree from "@/components/RandomTree.vue";
-import {ref} from "vue";
-import type {StudentLoginDTO} from "@/api/student/type";
-import type {ShopLoginDTO} from "@/api/shop/type";
 import {requestStudentLogin} from "@/api/student";
 import {requestShopLogin} from "@/api/shop";
+import {reactive} from "vue";
+import {setLocalStorage} from "@/utils/local-storage";
+import router from "@/router";
 
-let login = ref<StudentLoginDTO | ShopLoginDTO>({
+let loginForm = reactive({
   username: '',
   password: ''
 })
 
-console.log(login)
-
 const studentLoginAction = () => {
-  const response = requestStudentLogin(login.value as StudentLoginDTO)
-  console.log(response)
+  requestStudentLogin(loginForm).then(response => {
+    setLocalStorage('token', response.data.token)
+    router.go('/student')
+  }).catch(error => {
+    console.log(error)
+  })
 }
 
 const shopLoginAction = () => {
-  const response = requestShopLogin(login.value as ShopLoginDTO)
-  console.log(response)
+  requestShopLogin(loginForm).then(response => {
+    setLocalStorage('token', response.data.token)
+    router.go('/shop')
+  }).catch(error => {
+    console.log(error)
+  })
 }
 
 </script>
@@ -32,19 +38,19 @@ const shopLoginAction = () => {
       <RandomTree/>
     </ReloadContainer>
     <div class="login-container">
-      <el-form ref="login">
-        <el-form-item prop="username">
+      <el-form ref="loginData" :model="loginForm">
+        <el-form-item prop="username" ref="username">
           <el-input
-              v-model="login.username"
+              v-model="loginForm.username"
               type="text"
               maxlength="256"
               minlength="6"
               placeholder="用户账号: "
           />
         </el-form-item>
-        <el-form-item prop="password">
+        <el-form-item prop="password" ref="password">
           <el-input
-              v-model="login.password"
+              v-model="loginForm.password"
               type="text"
               maxlength="256"
               minlength="6"
@@ -110,8 +116,6 @@ const shopLoginAction = () => {
         }
       }
     }
-
   }
-
 }
 </style>
