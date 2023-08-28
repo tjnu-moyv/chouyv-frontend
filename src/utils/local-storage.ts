@@ -1,10 +1,9 @@
-import dayjs from "dayjs";
-
 /**
  * 默认过期时间
  * @type {number}
  */
-const overdueSecondDefault: number = dayjs().hour(2).unix()
+const hoursToAdd = 2
+const overdueSecondDefault: () => number = () => Date.now() / 1000 + 3600 * hoursToAdd;
 
 /**
  * 设置localStorage
@@ -20,7 +19,7 @@ const setLocalStorage = (key: string, value: string, overdueSecond?: number) => 
     // 移除
     localStorage.removeItem(key);
   } else {
-    const exp = overdueSecond || overdueSecondDefault;
+    const exp = overdueSecond || overdueSecondDefault();
     localStorage[key] = JSON.stringify({
       value,
       exp
@@ -40,7 +39,7 @@ const getLocalStorage = (key: string): string | null => {
       // 获取不到
       return null
     }
-    if (target.exp < Date.now()) {
+    if (target.exp < (Date.now() / 1000)) {
       // 过期了 移除
       localStorage.removeItem(key)
       return null
