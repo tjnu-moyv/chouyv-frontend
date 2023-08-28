@@ -49,7 +49,7 @@ const shopLoginAction = () => {
               type="text"
               maxlength="256"
               minlength="6"
-              placeholder="用户账号: "
+              placeholder="用户密码: "
           />
         </el-form-item>
       </el-form>
@@ -99,9 +99,11 @@ const shopLoginAction = () => {
 
     .other {
 
-      margin-top: 1rem;
+      margin-top: 2rem;
 
       p {
+
+        font-size: 0.8rem;
 
         a {
           display: inline-block;

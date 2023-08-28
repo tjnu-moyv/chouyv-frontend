@@ -11,9 +11,9 @@ const overdueSecondDefault: number = dayjs().hour(2).unix()
  * <li>只有key不为空时将key对应的值清空</li>
  * <li>只有overdueSecond为空时将value添加到key对应的位置中 并设置默认的过期时间为一小时</li>
  * <li>都不为空时将值设置过期时间放入</li>
- * @param {string} key           键
- * @param {string} value         值 可空
- * @param {number} overdueSecond 过期时间 可空
+ * @param key           键
+ * @param value         值 可空
+ * @param overdueSecond 过期时间 可空
  */
 const setLocalStorage = (key: string, value: string, overdueSecond?: number) => {
   if (!value) {
