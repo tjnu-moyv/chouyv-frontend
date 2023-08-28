@@ -1,77 +1,50 @@
-<template>
-  <div>
-    <h1>选餐页面</h1>
-    <div>
-      <label for="shop-filter">筛选商铺：</label>
-      <input type="text" id="shop-filter" v-model="shopFilter" @input="filterShops"/>
-    </div>
-    <div>
-      <label for="item-filter">搜索商品：</label>
-      <input type="text" id="item-filter" v-model="itemFilter" @input="filterItems"/>
-    </div>
-    <div>
-      <h2>商铺列表</h2>
-      <ul>
-        <li v-for="shop in filteredShops" :key="shop.id">{{ shop.name }}</li>
-      </ul>
-    </div>
-    <div>
-      <h2>商品列表</h2>
-      <ul>
-        <li v-for="item in filteredItems" :key="item.id">{{ item.name }} - {{ item.price }}</li>
-      </ul>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import {computed, onMounted, ref} from 'vue';
+import {onMounted, ref} from 'vue';
+import type {ShopInfo} from "@/api/module/ShopInfo";
+import type {ShopProducts} from "@/api/module/ShopProducts";
+import {requestAllShops} from "@/api/shop";
 
-interface Shop {
-  id: number;
-  name: string;
-  location: string;
-  // 其他属性...
+interface ShopViewModule extends ShopInfo {
+  shopProducts: ShopProducts[]
 }
 
-interface Item {
-  id: number;
-  name: string;
-  price: number;
-  shopId: number;
-  // 其他属性...
-}
-
-const shopList: Shop[] = []; // 从后台获取的商铺列表
-const itemList: Item[] = []; // 从后台获取的商品列表
-
-const shopFilter = ref('');
-const itemFilter = ref('');
-
-const filteredShops = computed(() => {
-  return shopList.filter(shop => shop.name.includes(shopFilter.value));
-});
-
-const filteredItems = computed(() => {
-  return itemList
-      .filter(item => item.name.includes(itemFilter.value))
-      .filter(item => filteredShops.value.some(shop => shop.id === item.shopId));
-});
-
-function filterShops() {
-  // 更新商铺筛选逻辑
-}
-
-function filterItems() {
-  // 更新商品筛选逻辑
-}
+// https://element-plus.org/zh-CN/component/table.html#%E7%AD%9B%E9%80%89
+const data = ref<ShopViewModule[]>([]);
 
 // 在页面加载时从后台获取商铺和商品列表
 onMounted(() => {
   // 调用获取商铺和商品列表的函数
+  requestAllShops().then(response => {
+    console.log(response)
+    for (let i = 0; i < response.data.shops.length; i++) {
+      let shopInfo = response.data.shops[i];
+      data.value.push({
+        id: shopInfo.id,
+        nickname: shopInfo.nickname,
+        phone: shopInfo.phone,
+        address: shopInfo.address,
+        shopProducts: []
+      })
+    }
+  }).catch(error => {
+    console.log(error)
+  })
 });
 </script>
 
+<template>
+  <div id="student">
+    <el-table :data="data">
+      <el-table-column prop="address"/>
+      <el-table-column prop="nickname"/>
+      <el-table-column prop="phone"/>
+    </el-table>
+  </div>
+</template>
+
 <style scoped>
-/* 样式 */
+#student {
+  width: 60%;
+  height: 80vh;
+}
 </style>

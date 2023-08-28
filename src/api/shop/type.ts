@@ -26,5 +26,7 @@ export interface TheShopInfoVO extends BaseVO {
 }
 
 export interface AllShopsVO extends BaseVO {
-  data: ShopInfo[]
+  data: {
+    shops: ShopInfo[]
+  }
 }
