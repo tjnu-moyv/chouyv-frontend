@@ -3,12 +3,38 @@ import {requestStudentRegister} from "@/api/student";
 import {reactive} from "vue";
 import {setLocalStorage} from "@/utils/local-storage";
 import router from "@/router";
+import type {StudentRegisterDTO} from "@/api/student/type";
+import type {FormRules} from "element-plus";
 
-let loginForm = reactive({
+let loginForm = reactive<StudentRegisterDTO>({
   username: '',
   password: '',
   checkPwd: ''
 })
+
+const rules = reactive<FormRules<StudentRegisterDTO>>({
+  username: [
+    {required: true, message: '请输入账号', trigger: 'blur'},
+    {min: 6, max: 256, message: '长度请保持在[6, 256]', trigger: 'blur'}
+  ],
+  password: [
+    {required: true, message: '请输入密码', trigger: 'blur'},
+    {min: 6, max: 256, message: '长度请保持在[6, 256]', trigger: 'blur'}
+  ],
+  checkPwd: [
+    {required: true, message: '请输入密码', trigger: 'blur'},
+    {min: 6, max: 256, message: '长度请保持在[6, 256]', trigger: 'blur'},
+    {
+      validator: (rule, value, callback) => {
+        if (value != loginForm.password) {
+          callback(new Error("两次输入的密码不相同"))
+        }
+        callback()
+      }, trigger: 'blur'
+    }
+  ]
+})
+
 
 const studentLoginAction = () => {
   requestStudentRegister(loginForm).then(response => {
@@ -24,7 +50,7 @@ const studentLoginAction = () => {
 <template>
   <div id="login-page">
     <div class="login-container">
-      <el-form ref="loginData" :model="loginForm">
+      <el-form ref="loginFormRef" :model="loginForm" :rules="rules" status-icon>
         <el-form-item prop="username" ref="username">
           <el-input
               v-model="loginForm.username"
@@ -40,6 +66,7 @@ const studentLoginAction = () => {
               type="text"
               maxlength="256"
               minlength="6"
+              show-password
               placeholder="用户密码: "
           />
         </el-form-item>
@@ -49,6 +76,7 @@ const studentLoginAction = () => {
               type="text"
               maxlength="256"
               minlength="6"
+              show-password
               placeholder="确认密码: "
           />
         </el-form-item>

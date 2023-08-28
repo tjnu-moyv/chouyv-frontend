@@ -4,10 +4,23 @@ import {requestShopLogin} from "@/api/shop";
 import {reactive} from "vue";
 import {setLocalStorage} from "@/utils/local-storage";
 import router from "@/router";
+import type {StudentLoginDTO} from "@/api/student/type";
+import type {FormRules} from "element-plus";
 
-let loginForm = reactive({
+const loginForm = reactive<StudentLoginDTO>({
   username: '',
   password: ''
+})
+
+const rules = reactive<FormRules<StudentLoginDTO>>({
+  username: [
+    {required: true, message: '请输入账号', trigger: 'blur'},
+    {min: 6, max: 256, message: '长度请保持在[6, 256]', trigger: 'blur'}
+  ],
+  password: [
+    {required: true, message: '请输入密码', trigger: 'blur'},
+    {min: 6, max: 256, message: '长度请保持在[6, 256]', trigger: 'blur'}
+  ]
 })
 
 const studentLoginAction = () => {
@@ -33,7 +46,7 @@ const shopLoginAction = () => {
 <template>
   <div id="login-page">
     <div class="login-container">
-      <el-form ref="loginData" :model="loginForm">
+      <el-form ref="loginFormRef" :model="loginForm" :rules="rules" status-icon>
         <el-form-item prop="username" ref="username">
           <el-input
               v-model="loginForm.username"
@@ -50,6 +63,7 @@ const shopLoginAction = () => {
               maxlength="256"
               minlength="6"
               placeholder="用户密码: "
+              show-password
           />
         </el-form-item>
       </el-form>
