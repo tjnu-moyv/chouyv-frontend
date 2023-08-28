@@ -5,7 +5,7 @@ import axios from "axios";
 
 // 创建一个 Axios 实例
 const request: AxiosInstance = axios.create({
-  baseURL: 'surkaa.shop:9000', // 请求的基础路径
+  baseURL: 'http://surkaa.shop:9000', // 请求的基础路径
   timeout: 5000,   // 请求超时时间
 });
 
@@ -33,13 +33,12 @@ request.interceptors.request.use((config: InternalAxiosRequestConfig): InternalA
 // 响应拦截器
 request.interceptors.response.use(
     (response: AxiosResponse) => {
-      let data = response.data;
-      if (data.code !== 200) {
-        let errMsg = data.message + ' ( ' + data.description + ' )';
+      if (response.data.code !== 200) {
+        let errMsg = response.data.message + ' ( ' + response.data.description + ' )';
         ElMessage.error(errMsg);
         return Promise.reject(new Error(errMsg));
       }
-      return data.data;
+      return response.data;
     },
     (error: any) => {
       ElMessage.error(error.message);

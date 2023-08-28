@@ -3,9 +3,8 @@
 </script>
 
 <template>
-  <div id="student">
-    student
-    <RouterView/>
+  <div id="student-shop">
+    student-shop: {{ $route.params.id }}
   </div>
 </template>
 

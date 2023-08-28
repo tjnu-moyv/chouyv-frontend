@@ -18,6 +18,18 @@ const router = createRouter({
     {
       path: '/student',
       component: () => import('@/view/student/index.vue'),
+      children: [
+        {
+          // 用户资料
+          path: 'profile/:id',
+          component: () => import('@/view/student/profile/index.vue'),
+        },
+        {
+          // 商家-商品 页面
+          path: 'shop/:id',
+          component: () => import('@/view/student/shop/index.vue'),
+        }
+      ]
     },
     {
       path: '/shop',
