@@ -1,21 +1,32 @@
 <script setup lang="ts">
-import ReloadContainer from "@/components/ReloadContainer.vue";
-import RandomTree from "@/components/RandomTree.vue";
 import {requestStudentLogin} from "@/api/student";
 import {requestShopLogin} from "@/api/shop";
 import {reactive} from "vue";
 import {setLocalStorage} from "@/utils/local-storage";
 import router from "@/router";
+import type {StudentLoginDTO} from "@/api/student/type";
+import type {FormRules} from "element-plus";
 
-let loginForm = reactive({
+const loginForm = reactive<StudentLoginDTO>({
   username: '',
   password: ''
+})
+
+const rules = reactive<FormRules<StudentLoginDTO>>({
+  username: [
+    {required: true, message: '请输入账号', trigger: 'blur'},
+    {min: 6, max: 256, message: '长度请保持在[6, 256]', trigger: 'blur'}
+  ],
+  password: [
+    {required: true, message: '请输入密码', trigger: 'blur'},
+    {min: 6, max: 256, message: '长度请保持在[6, 256]', trigger: 'blur'}
+  ]
 })
 
 const studentLoginAction = () => {
   requestStudentLogin(loginForm).then(response => {
     setLocalStorage('token', response.data.token)
-    router.go('/student')
+    router.push('student')
   }).catch(error => {
     console.log(error)
   })
@@ -24,7 +35,7 @@ const studentLoginAction = () => {
 const shopLoginAction = () => {
   requestShopLogin(loginForm).then(response => {
     setLocalStorage('token', response.data.token)
-    router.go('/shop')
+    router.push('shop')
   }).catch(error => {
     console.log(error)
   })
@@ -34,11 +45,8 @@ const shopLoginAction = () => {
 
 <template>
   <div id="login-page">
-    <ReloadContainer>
-      <RandomTree/>
-    </ReloadContainer>
     <div class="login-container">
-      <el-form ref="loginData" :model="loginForm">
+      <el-form ref="loginFormRef" :model="loginForm" :rules="rules" status-icon>
         <el-form-item prop="username" ref="username">
           <el-input
               v-model="loginForm.username"
@@ -54,7 +62,8 @@ const shopLoginAction = () => {
               type="text"
               maxlength="256"
               minlength="6"
-              placeholder="用户账号: "
+              placeholder="用户密码: "
+              show-password
           />
         </el-form-item>
       </el-form>
@@ -104,9 +113,11 @@ const shopLoginAction = () => {
 
     .other {
 
-      margin-top: 1rem;
+      margin-top: 2rem;
 
       p {
+
+        font-size: 0.8rem;
 
         a {
           display: inline-block;

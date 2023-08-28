@@ -17,27 +17,27 @@ const router = createRouter({
     },
     {
       path: '/student',
-      component: () => import('@/view/student/index.vue'),
+      component: () => import('@/view/student/StudentPage.vue'),
       children: [
         {
           // 用户资料
           path: 'profile/:id',
-          component: () => import('@/view/student/profile/index.vue'),
+          component: () => import('@/view/student/TheStudent.vue'),
         },
         {
           // 商家-商品 页面
           path: 'shop/:id',
-          component: () => import('@/view/student/shop/index.vue'),
+          component: () => import('@/view/student/TheShop.vue'),
         }
       ]
     },
     {
       path: '/shop',
-      component: () => import('@/view/shop/index.vue'),
+      component: () => import('@/view/ShopPage.vue'),
     },
     {
       path: '/run',
-      component: () => import('@/view/run/index.vue'),
+      component: () => import('@/view/RunPage.vue'),
     },
   ]
 })

@@ -23,7 +23,7 @@ request.interceptors.request.use((config: InternalAxiosRequestConfig): InternalA
       return config;
     }
   }
-  let token = JSON.parse(getLocalStorage('token'));
+  let token = JSON.parse(getLocalStorage('token')!);
   if (token !== null) {
     config.headers['token'] = token.value;
   }
