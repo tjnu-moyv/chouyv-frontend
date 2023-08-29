@@ -17,7 +17,7 @@ const router = createRouter({
     },
     {
       path: '/student',
-      component: () => import('@/view/student/StudentPage.vue'),
+      component: () => import('@/view/StudentPage.vue'),
       children: [
         {
           // 用户资料
