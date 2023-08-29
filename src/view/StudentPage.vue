@@ -3,6 +3,9 @@ import {onMounted, ref} from 'vue';
 import type {ShopInfo} from "@/api/module/ShopInfo";
 import type {ShopProducts} from "@/api/module/ShopProducts";
 import {requestAllShops} from "@/api/shop";
+import router from "@/router";
+
+// 点击某元素之外的地方触发事件
 
 interface ShopViewModule extends ShopInfo {
   shopProducts: ShopProducts[]
@@ -10,6 +13,17 @@ interface ShopViewModule extends ShopInfo {
 
 // https://element-plus.org/zh-CN/component/table.html#%E7%AD%9B%E9%80%89
 const data = ref<ShopViewModule[]>([]);
+
+let showTheShop = ref(false)
+
+const shopClick = (row) => {
+  showTheShop.value = true
+  router.push('/student/shop/' + row.id)
+}
+
+const closeTheShop = () => {
+  console.log('outside')
+}
 
 // 在页面加载时从后台获取商铺和商品列表
 onMounted(() => {
@@ -34,7 +48,8 @@ onMounted(() => {
 
 <template>
   <div id="student">
-    <el-table :data="data">
+    <RouterView/>
+    <el-table :data="data" @cell-click="shopClick" v-clickoutside="closeTheShop">
       <el-table-column prop="address"/>
       <el-table-column prop="nickname"/>
       <el-table-column prop="phone"/>
